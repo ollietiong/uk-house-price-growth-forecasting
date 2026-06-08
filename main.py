@@ -1,14 +1,19 @@
 import os
+import numpy as np
 from sklearn.pipeline import Pipeline
 from src.data.download import download_file
 from src.data.load_data import load_data
 from src.data.clean_data import clean_data
 from src.data.preprocessor import build_preprocessor
-from src.data.build_dataset import build_dataset
+from src.data.build_dataset import build_CV_datasets
+from src.evaluation import train_and_evaluate
+from src.evaluation import build_baseline
 from src.features.feature_engineering import FeatureEngineer
 from src.pipelines.pipeline import build_pipeline
+from src.pipelines.pipeline import build_base_pipeline
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import root_mean_squared_error
+
 
 
 def main():
@@ -56,35 +61,26 @@ def main():
         features = FeatureEngineer()
         df = features.transform_time_features(df)
 
-        # build dataset
-        datasets = build_dataset(df)
+        # build cross-validation datasets using expanding window.
+        datasets = build_CV_datasets(df)
 
+        # iterate over CV splits training models
         for i,j in enumerate(datasets):
-            # X_train i[0], y_train i[1], X_test i[2], y_test i[3]
-            X_train,y_train,X_test,y_test = j[0],j[1],j[2],j[3]
+            print(f"--- Data subset: {i} ---\n")
 
-            # Build pipeline
-            pipe = build_pipeline(X_train)
+            # build baseline
+            print(f"--- BASELINE ---\n")
+            build_baseline(j[0],j[1],j[2],j[3])
 
-            # Train model
-            pipe.fit(X_train,y_train)
-            print("Model fit to training data")
+            # build linear regression model
+            print(f"--- LINEAR REGRESSION MODEL ---\n")
+            train_and_evaluate(j[0],j[1],j[2],j[3],"lr")
 
-            # Evaluate
-            preds = pipe.predict(X_test)
-            mae = mean_absolute_error(y_test, preds)
-            rmse = root_mean_squared_error(y_test, preds)
-            
-            direction = sum(y_test.multiply(preds) >= 0)/len(y_test)
-
-
-            print(f"Data subset: {i}")
-            print(f"Direction: {direction}")
-            print(f"Mean absolute error: {mae}")
-            print(f"Root mean squared error: {mae}")
-
-            
-            
+            # build random forest model 
+            print(f"--- RANDOM FOREST MODEL ---\n")
+            train_and_evaluate(j[0],j[1],j[2],j[3])
+        
+        
 
         
     except FileNotFoundError as e:
