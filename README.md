@@ -15,6 +15,37 @@ The project focuses on understanding:
 
 ---
 
+## Project Design
+
+The project is organised using two complementary workflows:
+
+### Research and Exploration
+
+Jupyter notebooks are used for:
+
+* Data exploration and visualisation
+* Missing data analysis
+* Feature development and testing
+* Model experimentation and comparison
+* Communicating findings through narrative analysis
+
+This allows exploratory work to remain transparent and reproducible.
+
+### Modular Pipeline
+
+Reusable code is separated into a structured Python package under `src/`.
+
+The pipeline is divided into components for:
+
+* Data ingestion and cleaning
+* Feature engineering
+* Preprocessing
+* Model training
+* Model evaluation
+
+This design separates exploratory work from reusable production code and makes it easier to extend the project with additional datasets, features, or forecasting models.
+
+
 ## Dataset
 
 ### UK House Price Index (HPI)
@@ -152,6 +183,9 @@ Potential extensions include:
 ```text
 ├── data/
 ├── notebooks/
+│   ├── 01_eda.ipynb
+│   ├── 02_modelling.ipynb
+│
 ├── src/
 │   ├── data/
 │   ├── features/
