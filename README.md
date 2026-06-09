@@ -136,8 +136,9 @@ Predicting annual growth rather than price levels helps reduce seasonality and f
 The following models were implemented:
 
 1. Mean baseline
-2. Linear Regression
-3. Random Forest Regressor
+2. Naive baseline
+3. Linear Regression
+4. Random Forest Regressor
 
 ### Validation
 
@@ -152,6 +153,7 @@ This preserves temporal ordering and avoids look-ahead bias.
 | Model             | MAE  | RMSE |
 | ----------------- | ---- | ---- |
 | Mean Baseline     | 4.22 | 5.25 |
+| Naive Baseline    | 1.34 | 1.91 |
 | Linear Regression | 0.99 | 1.37 |
 | Random Forest     | 1.04 | 1.45 |
 
